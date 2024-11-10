@@ -1,0 +1,89 @@
+﻿@model List<ArchivosModel>
+@{
+    ViewData["Title"] = "Archivos Cargados";
+}
+<div class="text-center">
+    <h1>Archivos Cargados</h1>
+</div>
+
+<div class="text-end mb-3">
+    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCargarArchivo">Cargar Archivo</a>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center ">
+    @if (Model.Count > 0)
+    {
+        @foreach (var archivo in Model)
+        {
+            <div class="col-4">
+                <div class="card">
+                    @if (archivo.Nombre.EndsWith(".pdf", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        <!-- Muestra el PDF -->
+                        <iframe src="@archivo.Url" width="100%" height="250px" frameborder="0"></iframe>
+                        <a href="@archivo.Url" download="@archivo.Nombre" class="btn btn-outline-secondary">Descargar @archivo.Nombre</a>
+
+                    }
+                    else if (archivo.Nombre.EndsWith(".jpg", System.StringComparison.OrdinalIgnoreCase) ||
+                    archivo.Nombre.EndsWith(".jpeg", System.StringComparison.OrdinalIgnoreCase) ||
+                    archivo.Nombre.EndsWith(".png", System.StringComparison.OrdinalIgnoreCase) ||
+                    archivo.Nombre.EndsWith(".gif", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        <!-- Muestra la Imagen -->
+                        <img src="@archivo.Url" alt="@archivo.Nombre" class="img-fluid" style="max-height: 250px; width: 100%; object-fit: cover;" />
+                        <a href="@archivo.Url" download="@archivo.Nombre" class="btn btn-outline-secondary">Descargar @archivo.Nombre</a>
+                    }
+                    else
+                    {
+                        <!-- Muestra un enlace para otros tipos de archivos -->
+                        <div class="card-body text-center">
+
+                            <a href="@archivo.Url" download="@archivo.Nombre" class="btn btn-outline-secondary">Descargar @archivo.Nombre</a>
+                        </div>
+                    }
+                    <div class="card-footer text-center">
+                        <small class="text-muted">@archivo.Nombre</small>
+                        <div style="justify-content:space-between; gap: 15px; display: flex;">
+                            <form asp-action="EliminarArchivo">
+                                <input type="hidden" value="@archivo.Nombre" name="nombreArchivo" />
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                            <form asp-action="EnviarArchivo" method="post" style="display:inline;">
+                                <input type="hidden" value="@archivo.Nombre" name="nombreArchivo" />
+                                <input type="hidden" value="@archivo.Url" name="urlArchivo" />
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                            </form>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+</div>
+
+
+<div class="modal" tabindex="-1" id="modalCargarArchivo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cargar Archivo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CargarArchivo" method="post" enctype="multipart/form-data">
+                    <label for="archivo" class="form-label">Selecciona un archivo</label>
+                    <input type="file" name="archivo" id="archivo" class="form-control" required />
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Cargar</button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
