@@ -130,7 +130,7 @@ namespace CompartirArchivos.Controllers
             return View("Archivos");
         }
 
-        //EndPoint de la API a donde caera el envio desde el otro servidor
+        //EndPoint de la API a donde caera el envio desde el otro servidor 
         [HttpPost("api/recibir-archivo")]
         public async Task<IActionResult> RecibirArchivo(IFormFile archivo)
         {
